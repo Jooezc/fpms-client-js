@@ -1,5 +1,5 @@
-import * as WebSocket from 'ws';
-import crypto from './crypto/index';
+import WebSocket from 'ws';
+import crypto from './crypto';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
 const PARTNER_ID_IOS = '14033'; // for iOS
