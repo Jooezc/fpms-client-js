@@ -1,5 +1,5 @@
-import WebSocket = require('ws');
-import crypto from './crypto';
+import * as WebSocket from 'ws';
+import crypto from './crypto/index';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
 const PARTNER_ID_IOS = '14033'; // for iOS
