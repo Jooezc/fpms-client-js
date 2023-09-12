@@ -438,5 +438,5 @@ class FpmsConnector {
   }
 }
 
- const fpms = new FpmsConnector();
- export default fpms;
+const fpms = new FpmsConnector();
+export default fpms;
