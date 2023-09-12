@@ -1,6 +1,6 @@
 {
   "name": "fpms-client-dev",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "fpms api sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test && npm run lint",
