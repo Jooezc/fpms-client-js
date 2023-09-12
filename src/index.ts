@@ -249,7 +249,6 @@ class FpmsConnector {
     if (this.aliveInterval) clearInterval(this.aliveInterval);
   }
 
-
   private getConfig(callback?: (result: any) => void) {
     const requestObj = {
       platformId: this.apiConfig!.PLATFORMID,
