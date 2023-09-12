@@ -38,7 +38,7 @@ export enum SMSPurpose {
   Register = 'registration',
 }
 
-export default class FpmsConnector {
+class FpmsConnector {
   private wsClient?: WebSocket;
   private apiConfig?: OpenAPIConfig;
   private requestId: number;
@@ -438,4 +438,5 @@ export default class FpmsConnector {
   }
 }
 
-export const fpms = new FpmsConnector();
+ const fpms = new FpmsConnector();
+ export default fpms;
