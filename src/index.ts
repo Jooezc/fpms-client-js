@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import crypto from './crypto';
+// import crypto from './crypto';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
 const PARTNER_ID_IOS = '14033'; // for iOS
@@ -415,16 +415,17 @@ class FpmsConnector {
 
   private getAbc(dataObj: any): string {
     if (!dataObj) return '';
-    try {
-      const txtStr = JSON.stringify(dataObj);
-      const key = crypto.MD5(this.mdSalt).toString(crypto.enc.Hex);
-      const retStr = crypto.enc.Base64.stringify(crypto.HmacSHA256(txtStr, key));
-      console.log(key, txtStr, retStr);
-      return retStr;
-    } catch (err) {
-      console.error(err);
-      return '';
-    }
+    // try {
+    //   const txtStr = JSON.stringify(dataObj);
+    //   const key = crypto.MD5(this.mdSalt).toString(crypto.enc.Hex);
+    //   const retStr = crypto.enc.Base64.stringify(crypto.HmacSHA256(txtStr, key));
+    //   console.log(key, txtStr, retStr);
+    //   return retStr;
+    // } catch (err) {
+    //   console.error(err);
+    //   return '';
+    // }
+    return "sadsadsajdskafhkashfsaLkdjakhfksajdlskahdskahd";
   }
 
   private sign(dataObj: any): any {
@@ -438,5 +439,4 @@ class FpmsConnector {
   }
 }
 
-const fpms = new FpmsConnector();
-export default fpms;
+export const fpms = new FpmsConnector();
