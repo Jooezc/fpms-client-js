@@ -4,6 +4,7 @@
   "description": "fpms api sdk",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",

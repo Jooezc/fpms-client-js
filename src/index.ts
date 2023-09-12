@@ -222,7 +222,7 @@ class FpmsConnector {
    * 获取 Google reCaptcha 验证是否开启, 如果开启，登录时需要填写 Google reCaptcha 验证
    * @param callback
    */
-  public isGoogleCaptchaOpen(callback?: (enabled: boolean) => void) {
+  public isGoogleCaptchaOpen(callback?: (open: boolean) => void) {
     if (!this.checkConfig(callback)) {
       return;
     }
@@ -238,6 +238,17 @@ class FpmsConnector {
   public isPlayerLogin() {
     return this.isLogin;
   }
+
+  public closeWsClient() {
+    if (
+      this.wsClient &&
+      (this.wsClient.readyState === WebSocket.OPEN || this.wsClient.readyState === WebSocket.CONNECTING)
+    )
+      this.wsClient.close();
+    this.callbackMap.clear();
+    if (this.aliveInterval) clearInterval(this.aliveInterval);
+  }
+
 
   private getConfig(callback?: (result: any) => void) {
     const requestObj = {
@@ -312,16 +323,6 @@ class FpmsConnector {
       }
     });
     return getSocket;
-  }
-
-  public closeWsClient() {
-    if (
-      this.wsClient &&
-      (this.wsClient.readyState === WebSocket.OPEN || this.wsClient.readyState === WebSocket.CONNECTING)
-    )
-      this.wsClient.close();
-    this.callbackMap.clear();
-    if (this.aliveInterval) clearInterval(this.aliveInterval);
   }
 
   private buildCommandString(
