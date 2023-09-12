@@ -1,3 +1,3 @@
-import crypto from "./crypto-js.js";
+import crypto from './crypto-js.js';
 
 export default crypto as any as typeof crypto;
