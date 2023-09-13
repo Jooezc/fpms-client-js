@@ -303,17 +303,17 @@ class FpmsConnector {
   /** 获取登录 URL */
   public getLoginURL(callback?: Function) {
     if (!this.checkConfig(callback)) {
-        return;
+      return;
     }
-     this.wsErrorHandler = callback;
-     const requestObj = {
-         gameId: this.config!.GAMEID,
-         clientDomainName: this.config!.WSCLIENTDOMAIN,
-         clientType: this.config!.WSCLIENTTYPE
-     }
-     const cmdString = this.buildCommandString("game", "getLoginURL", requestObj, callback);
-     this.send(cmdString, callback);
- }
+    this.wsErrorHandler = callback;
+    const requestObj = {
+      gameId: this.config!.GAMEID,
+      clientDomainName: this.config!.WSCLIENTDOMAIN,
+      clientType: this.config!.WSCLIENTTYPE,
+    };
+    const cmdString = this.buildCommandString('game', 'getLoginURL', requestObj, callback);
+    this.send(cmdString, callback);
+  }
 
   /***
    * 获取 Google reCaptcha 验证是否开启, 如果开启，登录时需要填写 Google reCaptcha 验证
