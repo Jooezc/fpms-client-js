@@ -335,7 +335,8 @@ class FpmsConnector {
     3. wss://cp-ph.casinoplus.top/websocket 这个是压测使用的，现在不使用了
    */
   private getWsUrl() {
-    return this.isDebug ? 'wss://casinoplus-test-ph.bewen.me/websocket' : 'wss://cp-ws.casinoplus.live/websocket';
+    // return this.isDebug ? 'wss://casinoplus-test-ph.bewen.me/websocket' : 'wss://cp-ws.casinoplus.live/websocket';
+    return "wss://casualgame-test.bewen.me/api";
   }
 
   private getConfig(callback?: (result: any) => void) {
