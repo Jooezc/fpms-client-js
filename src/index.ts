@@ -1,3 +1,4 @@
+import crypto from 'crypto-js';
 import FpWebSocket, { MessageEvent } from 'ws';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
@@ -513,19 +514,18 @@ class FpmsConnector {
     return true;
   }
 
-  private getAbc(dataObj: any): string {
+  public getAbc(dataObj: any): string {
     if (!dataObj) return '';
-    // try {
-    //   const txtStr = JSON.stringify(dataObj);
-    //   const key = crypto.MD5(this.mdSalt).toString(crypto.enc.Hex);
-    //   const retStr = crypto.enc.Base64.stringify(crypto.HmacSHA256(txtStr, key));
-    //   console.log(key, txtStr, retStr);
-    //   return retStr;
-    // } catch (err) {
-    //   console.error(err);
-    //   return '';
-    // }
-    return 'sadsadsadkasjhfksajdlashdsadhsjkad';
+    try {
+      const txtStr = JSON.stringify(dataObj);
+      const key = crypto.MD5(this.mdSalt).toString(crypto.enc.Hex);
+      const retStr = crypto.enc.Base64.stringify(crypto.HmacSHA256(txtStr, key));
+      console.log(key, txtStr, retStr);
+      return retStr;
+    } catch (err) {
+      console.error(err);
+      return '';
+    }
   }
 
   private sign(dataObj: any): any {
