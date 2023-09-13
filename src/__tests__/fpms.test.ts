@@ -14,8 +14,10 @@ test('fpms test', async () => {
   //   expect(fpms.loginByPassword("fffffffffeb5adeafeb5adea00000000", "63", "8888866666", "888888", "", (res: FPResponse) => {
   //       console.log(`res=${JSON.stringify(res)}`);
   //   }));
-  expect(fpms.getAbc({
-    phoneNumber: "8888866666",
-    password: "888888"
-  }));
+  expect(
+    fpms.getAbc({
+      phoneNumber: '8888866666',
+      password: '888888',
+    }),
+  );
 });
