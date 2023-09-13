@@ -1,5 +1,4 @@
 import crypto from 'crypto-js';
-import FpWebSocket, { MessageEvent } from 'ws';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
 const PARTNER_ID_IOS = '14033'; // for iOS
@@ -108,7 +107,7 @@ class FpmsConnector {
   /** 是否登录 */
   private isLogin: boolean;
   /** Websocket 对象 */
-  private socket?: FpWebSocket;
+  private socket?: WebSocket;
   /** 用户注入的 Api 配置 */
   private config?: OpenAPIConfig;
   /** 请求Id */
@@ -325,7 +324,7 @@ class FpmsConnector {
   public closeWsClient() {
     if (
       this.socket &&
-      (this.socket.readyState === FpWebSocket.OPEN || this.socket.readyState === FpWebSocket.CONNECTING)
+      (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)
     )
       this.socket.close();
     this.callbackMap.clear();
@@ -351,11 +350,11 @@ class FpmsConnector {
   }
 
   private initWsClient() {
-    return new Promise<FpWebSocket>((resolve, reject) => {
+    return new Promise<WebSocket>((resolve, reject) => {
       try {
         const self = this;
         console.log('init ws: ', this.getWsUrl());
-        this.socket = new FpWebSocket(this.getWsUrl());
+        this.socket = new WebSocket(this.getWsUrl());
         console.log('init ws: ', this.socket?.readyState);
         this.socket.onmessage = this.onMessage.bind(this);
         console.log('init ws: 1');
@@ -382,9 +381,9 @@ class FpmsConnector {
     });
   }
 
-  private async getWsClient(): Promise<FpWebSocket> {
+  private async getWsClient(): Promise<WebSocket> {
     const self = this;
-    const getSocket = new Promise<FpWebSocket>((resolve, reject) => {
+    const getSocket = new Promise<WebSocket>((resolve, reject) => {
       if (self.socket == undefined) {
         self.initWsClient();
       } else {
@@ -392,7 +391,7 @@ class FpmsConnector {
           resolve(self.socket);
           return;
         }
-        if (self.socket.readyState === FpWebSocket.CONNECTING) {
+        if (self.socket.readyState === WebSocket.CONNECTING) {
           self.socket.onopen = () => {
             const cmdString = self.buildCommandString('connection', 'setLang', { lang: CertLang.English });
             self.socket?.send(cmdString);
@@ -406,9 +405,9 @@ class FpmsConnector {
           };
           return;
         }
-        if (self.socket.readyState === FpWebSocket.CLOSING || self.socket.readyState === FpWebSocket.CLOSED) {
+        if (self.socket.readyState === WebSocket.CLOSING || self.socket.readyState === WebSocket.CLOSED) {
           self.isLogin = false;
-          self.socket = new FpWebSocket(self.getWsUrl());
+          self.socket = new WebSocket(self.getWsUrl());
           self.socket.onmessage = self.onMessage.bind(self);
           self.socket.onopen = () => {
             self.setLang();
@@ -457,7 +456,7 @@ class FpmsConnector {
       if (retryCount < 2) {
         this.send(message, losePacketHandler, ++retryCount);
       } else {
-        console.log('FpWebSocket connect error:', JSON.stringify(error));
+        console.log('WebSocket connect error:', JSON.stringify(error));
         if (error.code === 403) {
           losePacketHandler?.({
             status: 100001,
@@ -491,7 +490,7 @@ class FpmsConnector {
 
   private isWsClientReady(): boolean {
     if (!this.socket) return false;
-    return this.socket && this.socket.readyState === FpWebSocket.OPEN;
+    return this.socket && this.socket.readyState === WebSocket.OPEN;
   }
 
   private isAlive(callback?: Function) {
