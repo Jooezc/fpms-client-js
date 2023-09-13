@@ -1,14 +1,14 @@
-import WebSocket from 'ws';
 import crypto from 'crypto-js';
+import WebSocket, { MessageEvent } from 'ws';
 
 const ALIVE_DELAY = 30 * 1000; // 30秒
 const PARTNER_ID_IOS = '14033'; // for iOS
 const PARTNER_ID_ANDROID = '14542'; // for Android
 const PARTNER_ID_H5 = '14543'; // for Web
 
+export type FPCallback = (res: FPResponse) => void;
+
 export type OpenAPIConfig = {
-  /** 服务器地址 */
-  SERVERURL: string;
   /** 平台Id */
   PLATFORMID: string;
   /** partnerId */
@@ -25,6 +25,69 @@ export type OpenAPIConfig = {
   WSCLIENTTYPE: number;
 };
 
+/** Api Res */
+export interface FPResponse {
+    status: number;
+    data?: ICertPlayer;
+    errorMessage?: string;
+}
+
+/** Player */
+export interface ICertPlayer {
+  tongitsPlayerId?: string;
+  playerId?: string;
+  token?: string;
+  status?: CertStatus;
+  step?: CertStep;
+  countryCode?: string;
+  phoneNum?: string;
+  lastRequestSmsTime?: number;
+  birthday?: string;
+  email?: string;
+  country?: string;
+  funds?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  identityType?: IdentityType;  // ID, License, Passport
+  province?: string;
+  city?: string;
+  address?: string;
+  credit?: number;
+  nickName?: string;
+  name?: string;
+  isRegister?: boolean;
+}
+
+/** 正在状态 */
+export enum CertStatus {
+    none = 0,
+    register = 1,
+    certification = 2
+}
+
+/** 认证步骤 */
+export enum CertStep {
+    phoneNum = 0,
+    smsCode,
+    birthday,
+    email,
+    country,
+    uploadPhoto,
+    setRealName,
+    sourceOfFunds,
+    address,
+    done
+}
+
+/** ID类型 */
+export enum IdentityType {
+    ID = 1,
+    License,
+    Passport
+}
+
+/** 语言 */
 export enum CertLang {
   Chinese = 1,
   English = 2,
@@ -33,22 +96,34 @@ export enum CertLang {
   Filipino = 5,
 }
 
+/** 获取验证码用途 */
 export enum SMSPurpose {
   PlayerLogin = 'playerLogin',
   Register = 'registration',
 }
 
 class FpmsConnector {
-  private wsClient?: WebSocket;
-  private apiConfig?: OpenAPIConfig;
-  private requestId: number;
-  private aliveInterval: number;
-  private callbackMap: Map<number, Function>;
-  private wsErrorHandler?: Function;
-  private mdSalt: string = 'ApP$!gNa+URe';
+  /** 是否调试环境 */
+  public isDebug: boolean;
+  /** 是否登录 */
   private isLogin: boolean;
+  /** Websocket 对象 */
+  private socket?: WebSocket;
+  /** 用户注入的 Api 配置 */
+  private config?: OpenAPIConfig;
+  /** 请求Id */
+  private requestId: number;
+  /** 心跳Timer */
+  private aliveInterval: number;
+  /** 接口回调Map */
+  private callbackMap: Map<number, FPCallback | Function>;
+  /** 错误回调 */
+  private wsErrorHandler?: Function;
+  /** 加密 */
+  private mdSalt: string = 'ApP$!gNa+URe';
 
   constructor() {
+    this.isDebug = false;
     this.isLogin = false;
     this.aliveInterval = 0;
     this.requestId = 0 | (Math.random() * 100000);
@@ -60,7 +135,7 @@ class FpmsConnector {
    * @param config
    */
   public initConfig(config: OpenAPIConfig) {
-    this.apiConfig = config;
+    this.config = config;
     this.initWsClient();
   }
 
@@ -81,7 +156,7 @@ class FpmsConnector {
       return;
     }
     const reqSmsObj = {
-      platformId: this.apiConfig!.PLATFORMID,
+      platformId: this.config!.PLATFORMID,
       phoneNumber: countryCode + phoneNum,
       purpose: purpose,
     };
@@ -104,22 +179,22 @@ class FpmsConnector {
     phoneNo: string,
     smsCode: string,
     captchaVerify?: string,
-    callback?: Function,
+    callback?: FPCallback,
   ) {
     if (!this.checkConfig(callback)) {
       return;
     }
-    const deviceType = this.apiConfig!.DEVICETYPE;
+    const deviceType = this.config!.DEVICETYPE;
     const partnerId = deviceType === 3 ? PARTNER_ID_ANDROID : deviceType === 4 ? PARTNER_ID_IOS : PARTNER_ID_H5;
     const registerObj: { [key: string]: any } = {
-      platformId: this.apiConfig!.PLATFORMID,
+      platformId: this.config!.PLATFORMID,
       partnerId: partnerId,
       phoneNumber: countryCode + phoneNo,
       smsCode: smsCode,
       deviceId: deviceId,
       deviceType: deviceType,
       longToken: true,
-      domain: this.apiConfig!.WSCLIENTDOMAIN,
+      domain: this.config!.WSCLIENTDOMAIN,
       captchaVerify: captchaVerify || '',
     };
     const self = this;
@@ -151,22 +226,22 @@ class FpmsConnector {
     phoneNo: string,
     userPwd: string,
     captchaVerify?: string,
-    callback?: Function,
+    callback?: FPCallback,
   ) {
     if (!this.checkConfig(callback)) {
       return;
     }
-    const deviceType = this.apiConfig!.DEVICETYPE;
+    const deviceType = this.config!.DEVICETYPE;
     const partnerId = deviceType === 3 ? PARTNER_ID_ANDROID : deviceType === 4 ? PARTNER_ID_IOS : PARTNER_ID_H5;
     const registerObj = {
-      platformId: this.apiConfig!.PLATFORMID,
+      platformId: this.config!.PLATFORMID,
       partnerId: partnerId,
       phoneNumber: countryCode + phoneNo,
       captchaVerify: captchaVerify || '',
       password: userPwd,
       deviceId: deviceId,
       deviceType: deviceType,
-      clientDomain: this.apiConfig!.WSCLIENTDOMAIN,
+      clientDomain: this.config!.WSCLIENTDOMAIN,
       longToken: true,
     };
     const self = this;
@@ -189,7 +264,7 @@ class FpmsConnector {
    * @param playerId
    * @param callback
    */
-  public loginByToken(token: string, playerId: string, callback?: Function) {
+  public loginByToken(token: string, playerId: string, callback?: FPCallback) {
     if (!this.checkConfig(callback)) {
       return;
     }
@@ -197,7 +272,7 @@ class FpmsConnector {
     const tokenObj = {
       playerId,
       token,
-      clientDomain: this.apiConfig!.WSCLIENTDOMAIN,
+      clientDomain: this.config!.WSCLIENTDOMAIN,
       isLogin: true,
     };
     const self = this;
@@ -241,17 +316,26 @@ class FpmsConnector {
 
   public closeWsClient() {
     if (
-      this.wsClient &&
-      (this.wsClient.readyState === WebSocket.OPEN || this.wsClient.readyState === WebSocket.CONNECTING)
+      this.socket &&
+      (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)
     )
-      this.wsClient.close();
+      this.socket.close();
     this.callbackMap.clear();
     if (this.aliveInterval) clearInterval(this.aliveInterval);
   }
 
+  /** fpms 正式服
+    1. wss://cp-ws.casinoplus.live/websocket
+    2. wss://cp-ws.casinoplus.top/websocket
+    3. wss://cp-ph.casinoplus.top/websocket 这个是压测使用的，现在不使用了
+   */
+  private getWsUrl() {
+    return this.isDebug ? "wss://casinoplus-test-ph.bewen.me/websocket" : "wss://cp-ws.casinoplus.live/websocket";
+  }
+
   private getConfig(callback?: (result: any) => void) {
     const requestObj = {
-      platformId: this.apiConfig!.PLATFORMID,
+      platformId: this.config!.PLATFORMID,
       device: 3,
     };
     const cmdString = this.buildCommandString('platform', 'getConfig', requestObj, callback);
@@ -261,12 +345,12 @@ class FpmsConnector {
   private initWsClient() {
     try {
       const self = this;
-      this.wsClient = new WebSocket(this.apiConfig!.SERVERURL);
-      this.wsClient.onmessage = this.onMessage.bind(this);
-      this.wsClient.onopen = () => {
+      this.socket = new WebSocket(this.getWsUrl());
+      this.socket.onmessage = this.onMessage.bind(this);
+      this.socket.onopen = () => {
         self.setLang();
       };
-      this.wsClient.onerror = (event) => {
+      this.socket.onerror = (event) => {
         console.log(`FPMS init ws onerror: ${JSON.stringify(event)}`);
       };
       // @ts-ignore
@@ -275,7 +359,7 @@ class FpmsConnector {
           console.log('sent alive result:', result);
         });
       }, ALIVE_DELAY);
-      return this.wsClient;
+      return this.socket;
     } catch (err: any) {
       console.log('init ws error: ', err);
     }
@@ -284,20 +368,20 @@ class FpmsConnector {
   private async getWsClient(): Promise<WebSocket> {
     const self = this;
     const getSocket = new Promise<WebSocket>((resolve, reject) => {
-      if (self.wsClient == undefined) {
+      if (self.socket == undefined) {
         self.initWsClient();
       } else {
         if (self.isWsClientReady()) {
-          resolve(self.wsClient);
+          resolve(self.socket);
           return;
         }
-        if (self.wsClient.readyState === WebSocket.CONNECTING) {
-          self.wsClient.onopen = () => {
+        if (self.socket.readyState === WebSocket.CONNECTING) {
+          self.socket.onopen = () => {
             const cmdString = self.buildCommandString('connection', 'setLang', { lang: CertLang.English });
-            self.wsClient?.send(cmdString);
-            resolve(self.wsClient!);
+            self.socket?.send(cmdString);
+            resolve(self.socket!);
           };
-          self.wsClient.onerror = (error) => {
+          self.socket.onerror = (error) => {
             console.log(`FPMS ws onerror: ${JSON.stringify(error)}`);
             this.wsErrorHandler?.(error);
             this.wsErrorHandler = undefined;
@@ -305,14 +389,14 @@ class FpmsConnector {
           };
           return;
         }
-        if (self.wsClient.readyState === WebSocket.CLOSING || self.wsClient.readyState === WebSocket.CLOSED) {
+        if (self.socket.readyState === WebSocket.CLOSING || self.socket.readyState === WebSocket.CLOSED) {
           self.isLogin = false;
-          self.wsClient = new WebSocket(self.apiConfig!.SERVERURL);
-          self.wsClient.onmessage = self.onMessage.bind(self);
-          self.wsClient.onopen = () => {
+          self.socket = new WebSocket(self.getWsUrl());
+          self.socket.onmessage = self.onMessage.bind(self);
+          self.socket.onopen = () => {
             self.setLang();
           };
-          self.wsClient.onerror = (error) => {
+          self.socket.onerror = (error) => {
             console.log(`FPMS reconnect ws onerror: ${JSON.stringify(error)}`);
             this.wsErrorHandler?.(error);
             this.wsErrorHandler = undefined;
@@ -334,7 +418,7 @@ class FpmsConnector {
     const cmd = {
       service: service,
       functionName: funName,
-      platformId: this.apiConfig!.PLATFORMID,
+      platformId: this.config!.PLATFORMID,
       requestId: this.getRequestId(),
       data: data,
     };
@@ -369,7 +453,7 @@ class FpmsConnector {
     }
   }
 
-  private onMessage(event: WebSocket.MessageEvent) {
+  private onMessage(event: MessageEvent) {
     if (event) {
       console.log('onMessage: ', event.data);
       try {
@@ -389,8 +473,8 @@ class FpmsConnector {
   }
 
   private isWsClientReady(): boolean {
-    if (!this.wsClient) return false;
-    return this.wsClient && this.wsClient.readyState === WebSocket.OPEN;
+    if (!this.socket) return false;
+    return this.socket && this.socket.readyState === WebSocket.OPEN;
   }
 
   private isAlive(callback?: Function) {
@@ -403,7 +487,7 @@ class FpmsConnector {
   }
 
   private checkConfig(complete?: Function): boolean {
-    if (!this.apiConfig) {
+    if (!this.config) {
       complete?.({
         status: 100000,
         errorMessage: 'SDK not initialized.',
@@ -428,8 +512,8 @@ class FpmsConnector {
   }
 
   private sign(dataObj: any): any {
-    if (dataObj && this.apiConfig) {
-      if (dataObj.deviceType === undefined) dataObj.deviceType = this.apiConfig.DEVICETYPE;
+    if (dataObj && this.config) {
+      if (dataObj.deviceType === undefined) dataObj.deviceType = this.config.DEVICETYPE;
       const copyData = JSON.parse(JSON.stringify(dataObj));
       delete copyData.requestId;
       dataObj.signature = this.getAbc(copyData);
