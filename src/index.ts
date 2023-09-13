@@ -365,26 +365,20 @@ class FpmsConnector {
     return new Promise<WebSocket>((resolve, reject) => {
       try {
         const self = this;
-        console.log('init ws: ', this.getWsUrl());
         this.socket = new WebSocket(this.getWsUrl());
-        console.log('init ws: ', this.socket?.readyState);
         this.socket.onmessage = this.onMessage.bind(this);
-        console.log('init ws: 1');
         this.socket.onopen = () => {
           self.setLang();
         };
-        console.log('init ws: 2');
         this.socket.onerror = (event) => {
           console.log(`FPMS init ws onerror: ${JSON.stringify(event)}`);
         };
-        console.log('init ws: 3');
         // @ts-ignore
         this.aliveInterval = setInterval(() => {
           self.isAlive((result: any) => {
             console.log('sent alive result:', result);
           });
         }, ALIVE_DELAY);
-        console.log('init ws: 4');
         resolve(this.socket);
       } catch (err: any) {
         console.log('init ws error: ', JSON.stringify(err));
@@ -490,7 +484,7 @@ class FpmsConnector {
         const callback = this.callbackMap.get(respObj.requestId);
         callback?.(respObj.data);
       } catch (err: any) {
-        console.log('parse json string error.' + err.toString());
+        console.log('parse json string error.' + JSON.stringify(err));
       }
     }
   }
