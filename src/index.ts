@@ -204,8 +204,8 @@ class FpmsConnector {
       registerObj,
       (result: any) => {
         if (result.status === 200) {
-            self.isLogin = true;
-            result.data.token = result.token;
+          self.isLogin = true;
+          result.data.token = result.token;
         }
         if (callback) callback(result);
       },
@@ -254,8 +254,8 @@ class FpmsConnector {
       registerObj,
       (result: any) => {
         if (result.status === 200) {
-            self.isLogin = true;
-            result.data.token = result.token;
+          self.isLogin = true;
+          result.data.token = result.token;
         }
         if (callback) callback(result);
       },
@@ -288,8 +288,8 @@ class FpmsConnector {
       tokenObj,
       (result: any) => {
         if (result.status === 200) {
-            self.isLogin = true;
-            result.data.token = result.token;
+          self.isLogin = true;
+          result.data.token = result.token;
         } else if (result.status === 493) {
           // token 过期
           result.errorMessage = 'The account login has expired, please log in again.';
@@ -349,33 +349,33 @@ class FpmsConnector {
 
   private initWsClient() {
     return new Promise<WebSocket>((resolve, reject) => {
-        try {
-            const self = this;
-            console.log('init ws: ', this.getWsUrl());
-            this.socket = new WebSocket(this.getWsUrl());
-            console.log('init ws: ', this.socket?.readyState);
-            this.socket.onmessage = this.onMessage.bind(this);
-            console.log('init ws: 1');
-            this.socket.onopen = () => {
-              self.setLang();
-            };
-            console.log('init ws: 2');
-            this.socket.onerror = (event) => {
-              console.log(`FPMS init ws onerror: ${JSON.stringify(event)}`);
-            };
-            console.log('init ws: 3');
-            // @ts-ignore
-            this.aliveInterval = setInterval(() => {
-              self.isAlive((result: any) => {
-                console.log('sent alive result:', result);
-              });
-            }, ALIVE_DELAY);
-            console.log('init ws: 4');
-            resolve(this.socket);
-          } catch (err: any) {
-            console.log('init ws error: ', err);
-            reject();
-          }
+      try {
+        const self = this;
+        console.log('init ws: ', this.getWsUrl());
+        this.socket = new WebSocket(this.getWsUrl());
+        console.log('init ws: ', this.socket?.readyState);
+        this.socket.onmessage = this.onMessage.bind(this);
+        console.log('init ws: 1');
+        this.socket.onopen = () => {
+          self.setLang();
+        };
+        console.log('init ws: 2');
+        this.socket.onerror = (event) => {
+          console.log(`FPMS init ws onerror: ${JSON.stringify(event)}`);
+        };
+        console.log('init ws: 3');
+        // @ts-ignore
+        this.aliveInterval = setInterval(() => {
+          self.isAlive((result: any) => {
+            console.log('sent alive result:', result);
+          });
+        }, ALIVE_DELAY);
+        console.log('init ws: 4');
+        resolve(this.socket);
+      } catch (err: any) {
+        console.log('init ws error: ', err);
+        reject();
+      }
     });
   }
 
