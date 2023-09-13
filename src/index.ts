@@ -519,7 +519,7 @@ class FpmsConnector {
     return true;
   }
 
-  public getAbc(dataObj: any): string {
+  private getAbc(dataObj: any): string {
     if (!dataObj) return '';
     try {
       const txtStr = JSON.stringify(dataObj);
