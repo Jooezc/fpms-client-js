@@ -336,7 +336,7 @@ class FpmsConnector {
    */
   private getWsUrl() {
     // return this.isDebug ? 'wss://casinoplus-test-ph.bewen.me/websocket' : 'wss://cp-ws.casinoplus.live/websocket';
-    return "wss://casualgame-test.bewen.me/api";
+    return 'wss://casualgame-test.bewen.me/api';
   }
 
   private getConfig(callback?: (result: any) => void) {
