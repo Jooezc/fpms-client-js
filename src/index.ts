@@ -322,10 +322,7 @@ class FpmsConnector {
   }
 
   public closeWsClient() {
-    if (
-      this.socket &&
-      (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)
-    )
+    if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING))
       this.socket.close();
     this.callbackMap.clear();
     if (this.aliveInterval) clearInterval(this.aliveInterval);
