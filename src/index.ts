@@ -27,9 +27,9 @@ export type OpenAPIConfig = {
 
 /** Api Res */
 export interface FPResponse {
-    status: number;
-    data?: ICertPlayer;
-    errorMessage?: string;
+  status: number;
+  data?: ICertPlayer;
+  errorMessage?: string;
 }
 
 /** Player */
@@ -49,7 +49,7 @@ export interface ICertPlayer {
   firstName?: string;
   middleName?: string;
   lastName?: string;
-  identityType?: IdentityType;  // ID, License, Passport
+  identityType?: IdentityType; // ID, License, Passport
   province?: string;
   city?: string;
   address?: string;
@@ -61,30 +61,30 @@ export interface ICertPlayer {
 
 /** 正在状态 */
 export enum CertStatus {
-    none = 0,
-    register = 1,
-    certification = 2
+  none = 0,
+  register = 1,
+  certification = 2,
 }
 
 /** 认证步骤 */
 export enum CertStep {
-    phoneNum = 0,
-    smsCode,
-    birthday,
-    email,
-    country,
-    uploadPhoto,
-    setRealName,
-    sourceOfFunds,
-    address,
-    done
+  phoneNum = 0,
+  smsCode,
+  birthday,
+  email,
+  country,
+  uploadPhoto,
+  setRealName,
+  sourceOfFunds,
+  address,
+  done,
 }
 
 /** ID类型 */
 export enum IdentityType {
-    ID = 1,
-    License,
-    Passport
+  ID = 1,
+  License,
+  Passport,
 }
 
 /** 语言 */
@@ -315,10 +315,7 @@ class FpmsConnector {
   }
 
   public closeWsClient() {
-    if (
-      this.socket &&
-      (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)
-    )
+    if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING))
       this.socket.close();
     this.callbackMap.clear();
     if (this.aliveInterval) clearInterval(this.aliveInterval);
@@ -330,7 +327,7 @@ class FpmsConnector {
     3. wss://cp-ph.casinoplus.top/websocket 这个是压测使用的，现在不使用了
    */
   private getWsUrl() {
-    return this.isDebug ? "wss://casinoplus-test-ph.bewen.me/websocket" : "wss://cp-ws.casinoplus.live/websocket";
+    return this.isDebug ? 'wss://casinoplus-test-ph.bewen.me/websocket' : 'wss://cp-ws.casinoplus.live/websocket';
   }
 
   private getConfig(callback?: (result: any) => void) {
