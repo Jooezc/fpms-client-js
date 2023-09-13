@@ -525,7 +525,7 @@ class FpmsConnector {
     //   console.error(err);
     //   return '';
     // }
-    return "sadsadsadkasjhfksajdlashdsadhsjkad";
+    return 'sadsadsadkasjhfksajdlashdsadhsjkad';
   }
 
   private sign(dataObj: any): any {
