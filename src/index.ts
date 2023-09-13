@@ -376,8 +376,8 @@ class FpmsConnector {
         console.log('init ws: 4');
         resolve(this.socket);
       } catch (err: any) {
-        console.log('init ws error: ', err);
-        reject();
+        console.log('init ws error: ', JSON.stringify(err));
+        reject(err);
       }
     });
   }
