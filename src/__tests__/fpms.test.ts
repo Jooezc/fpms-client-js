@@ -1,5 +1,6 @@
 import { fpms, FPResponse } from '../index';
 test('fpms test', async () => {
+  console.log(`fpms=`, fpms);
   expect((fpms.isDebug = true));
   // await fpms.initConfig({
   //   PLATFORMID: "50",
