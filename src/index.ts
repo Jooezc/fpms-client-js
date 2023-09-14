@@ -33,50 +33,29 @@ export interface FPResponse {
 
 /** Player */
 export interface ICertPlayer {
-  tongitsPlayerId?: string;
+
   playerId?: string;
   token?: string;
-  status?: CertStatus;
-  step?: CertStep;
-  countryCode?: string;
-  phoneNum?: string;
-  lastRequestSmsTime?: number;
-  birthday?: string;
-  email?: string;
-  country?: string;
-  funds?: string;
-  firstName?: string;
-  middleName?: string;
-  lastName?: string;
-  identityType?: IdentityType; // ID, License, Passport
-  province?: string;
-  city?: string;
-  address?: string;
-  credit?: number;
+  IDstatus?: number;
+  phoneNumber?: string;
+  phoneType?: string;
   nickName?: string;
+  nationality?: string;
+  province?: string;
+  playerCity?: string;
   name?: string;
+  gender?: boolean;
+  fullEmail?: string;
+  registrationTime?: string;
+  sourceOfFunds?: string;
+  userCurrentPoint?: number;
+  isCompleteInfo?: boolean;
+  isLogin?: boolean;
   isRegister?: boolean;
-}
+  isGLife?: boolean;
+  isTestPlayer?: boolean;
 
-/** 正在状态 */
-export enum CertStatus {
-  none = 0,
-  register = 1,
-  certification = 2,
-}
-
-/** 认证步骤 */
-export enum CertStep {
-  phoneNum = 0,
-  smsCode,
-  birthday,
-  email,
-  country,
-  uploadPhoto,
-  setRealName,
-  sourceOfFunds,
-  address,
-  done,
+  [key: string]: any;
 }
 
 /** ID类型 */

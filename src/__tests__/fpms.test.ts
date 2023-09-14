@@ -12,7 +12,7 @@ test('fpms test', async () => {
   //   WSCLIENTTYPE: 4
   // });
   // console.log("fpms init complete.");
-  //   expect(fpms.loginByPassword("fffffffffeb5adeafeb5adea00000000", "63", "8888866666", "888888", "", (res: FPResponse) => {
-  //       console.log(`res=${JSON.stringify(res)}`);
-  //   }));
+  // expect(fpms.loginByPassword("fffffffffeb5adeafeb5adea00000000", "63", "8888866666", "888888", "", (res: FPResponse) => {
+  //   console.log(`res=${JSON.stringify(res)}`);
+  // }));
 });
