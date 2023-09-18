@@ -33,7 +33,6 @@ export interface FPResponse {
 
 /** Player */
 export interface ICertPlayer {
-
   playerId?: string;
   token?: string;
   IDstatus?: number;
