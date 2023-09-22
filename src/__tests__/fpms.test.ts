@@ -1,7 +1,6 @@
 import { fpms, FPResponse } from '../index';
 test('fpms test', async () => {
   console.log(`fpms=`, fpms);
-  expect((fpms.isDebug = true));
   // await fpms.initConfig({
   //   PLATFORMID: "50",
   //   PARTNERID: "14033",
@@ -13,6 +12,6 @@ test('fpms test', async () => {
   // });
   // console.log("fpms init complete.");
   // expect(fpms.loginByPassword("fffffffffeb5adeafeb5adea00000000", "63", "8888866666", "888888", "", (res: FPResponse) => {
-  //   console.log(`res=${JSON.stringify(res)}`);
+  //   console.log(`-----------------res=${JSON.stringify(res)}`);
   // }));
 });
