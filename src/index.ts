@@ -86,7 +86,7 @@ class FpmsConnector {
    * @param config
    */
   public async initConfig(config: OpenAPIConfig, sdkTarget?: string) {
-    this.service = FPMS.getService(config);
+    this.service = FPMS.getService(config, sdkTarget);
     await this.service.initWsClient();
     console.log("============================ init initConfig complete =============================");
   }
