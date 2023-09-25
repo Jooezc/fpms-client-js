@@ -1,11 +1,11 @@
 ### 使用
 1. 使用 npm 安装
 ```
-npm i fpms-client-dev
+npm i fpms-client-js
 ```
 2. 导入 sdk
 ```
-import { fpms } from 'fpms-client-dev'
+import { fpms } from 'fpms-client-js'
 ```
 3. 设置 sdk 环境, 默认生产环境
 ```
