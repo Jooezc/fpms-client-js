@@ -7,11 +7,7 @@ npm i fpms-client-js
 ```
 import { fpms } from 'fpms-client-js'
 ```
-3. 设置 sdk 环境, 默认生产环境
-```
-fpms.isDebug = true;
-```
-4. 初始化
+3. 初始化
 ```
 fpms.initConfig({
    PLATFORMID: "xx",
@@ -24,7 +20,7 @@ fpms.initConfig({
 });
 ```
 
-5. 接口调用
+4. 接口调用
 ```
 /** 获取验证码 */
 fpms.getSMSCode("countryCode", "phoneNum", "purpose");
