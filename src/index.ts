@@ -1,4 +1,4 @@
-import FPMS from './fpms.js';
+import * as FPMS from './fpms.js';
 
 export type FPCallback = (res: FPResponse) => void;
 
