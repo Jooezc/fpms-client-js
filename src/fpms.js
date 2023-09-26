@@ -1,6 +1,6 @@
 "use strict";
-const WebSocket = require("ws");
-const CryptoJS = require("crypto-js");
+import WebSocket, { OPEN, CONNECTING, CLOSING, CLOSED } from "ws";
+import { MD5, enc, HmacSHA256 } from "crypto-js";
 
 const ALIVE_DELAY = 5 * 1000; // 30秒
 const PARTNER_ID_IOS = "14033"; // for iOS
@@ -254,8 +254,8 @@ class FpmsService {
   closeWsClient() {
     if (
       this.#socket &&
-      (this.#socket.readyState === WebSocket.OPEN ||
-        this.#socket.readyState === WebSocket.CONNECTING)
+      (this.#socket.readyState === OPEN ||
+        this.#socket.readyState === CONNECTING)
     )
       this.#socket.close();
     this.#callbackMap.clear();
@@ -323,7 +323,7 @@ class FpmsService {
           resolve(self.#socket);
           return;
         }
-        if (self.#socket.readyState === WebSocket.CONNECTING) {
+        if (self.#socket.readyState === CONNECTING) {
           self.#socket.onopen = () => {
             self.#setLang();
             resolve(self.#socket);
@@ -337,8 +337,8 @@ class FpmsService {
           return;
         }
         if (
-          self.#socket.readyState === WebSocket.CLOSING ||
-          self.#socket.readyState === WebSocket.CLOSED
+          self.#socket.readyState === CLOSING ||
+          self.#socket.readyState === CLOSED
         ) {
           self.#isLogin = false;
           self.#socket = new WebSocket(self.#getWsUrl());
@@ -427,7 +427,7 @@ class FpmsService {
 
   #isWsClientReady() {
     if (!this.#socket) return false;
-    return this.#socket && this.#socket.readyState === WebSocket.OPEN;
+    return this.#socket && this.#socket.readyState === OPEN;
   }
 
   #isAlive(callback) {
@@ -459,9 +459,9 @@ class FpmsService {
     if (!dataObj) return "";
     try {
       const txtStr = JSON.stringify(dataObj);
-      const key = CryptoJS.MD5(this.#mdSalt).toString(CryptoJS.enc.Hex);
-      const retStr = CryptoJS.enc.Base64.stringify(
-        CryptoJS.HmacSHA256(txtStr, key)
+      const key = MD5(this.#mdSalt).toString(enc.Hex);
+      const retStr = enc.Base64.stringify(
+        HmacSHA256(txtStr, key)
       );
       console.log(key, txtStr, retStr);
       return retStr;
@@ -493,6 +493,4 @@ function getService(config, targetSdk) {
   return new global.FPMS(config);
 }
 
-module.exports = {
-  getService: getService,
-};
+export const getService = getService;
