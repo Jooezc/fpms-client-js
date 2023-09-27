@@ -1,1 +1,1 @@
-export function getService(config: any, targetSdk: any): any;
+export function getService(config: any, targetSdk?: string): any;
