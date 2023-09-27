@@ -490,4 +490,4 @@ function getFpmsSdk(config, targetSdk = "") {
   return new global.FPMS(config);
 }
 
-export const getFpmsSdk = getFpmsSdk;
+export { getFpmsSdk };
