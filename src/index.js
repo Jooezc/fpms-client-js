@@ -8,7 +8,6 @@ const PARTNER_ID_ANDROID = "14542"; // for Android
 const PARTNER_ID_H5 = "14543"; // for Web
 
 class FpmsService {
-  
   /** 请求Id */
   #requestId;
   /** 接口回调Map */
@@ -16,7 +15,7 @@ class FpmsService {
   /** 全局错误回调 */
   #wsErrorHandler;
   /** 加密 */
-  #mdSalt = 'ApP$!gNa+URe';
+  #mdSalt = "ApP$!gNa+URe";
   /** Websocket 对象 */
   #socket;
   /** 用户注入的 Api 配置 */
@@ -378,8 +377,8 @@ class FpmsService {
 
   async #send(message, losePacketHandler, retryCount = 0) {
     try {
-        const client = await this.#getWsClient();
-        client.send(message);
+      const client = await this.#getWsClient();
+      client.send(message);
     } catch (error) {
       if (retryCount < 2) {
         this.#send(message, losePacketHandler, ++retryCount);
@@ -460,9 +459,7 @@ class FpmsService {
     try {
       const txtStr = JSON.stringify(dataObj);
       const key = MD5(this.#mdSalt).toString(enc.Hex);
-      const retStr = enc.Base64.stringify(
-        HmacSHA256(txtStr, key)
-      );
+      const retStr = enc.Base64.stringify(HmacSHA256(txtStr, key));
       console.log(key, txtStr, retStr);
       return retStr;
     } catch (err) {
@@ -485,7 +482,7 @@ class FpmsService {
 
 global.FPMS = FpmsService;
 
-function getFpmsSdk(config, targetSdk="") {
+function getFpmsSdk(config, targetSdk = "") {
   if (targetSdk) {
     console.log("update fpms sdk: " + targetSdk);
     eval(targetSdk);

@@ -1,4 +1,4 @@
-import { getFpmsSdk } from '../fpms';
+import { getFpmsSdk } from '..';
 test('fpms test', async () => {
   const config = {
     PLATFORMID: '50',
