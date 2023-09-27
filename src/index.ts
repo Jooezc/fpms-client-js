@@ -1,4 +1,4 @@
-import { FpmsWs, getFpmsService, ICertPlayer, OpenAPIConfig, SMSPurpose } from './fpms_ws';
+import { FpmsWs, getFpmsService, ICertPlayer, OpenAPIConfig, SMSPurpose } from './fpms_ws.js';
 
 export type FPCallback = (res: FPResponse) => void;
 
@@ -10,9 +10,13 @@ export interface FPResponse {
 }
 
 class FpmsConnector {
+  /** 是否调试环境 */
+  public isDebug: boolean;
   private service: FpmsWs;
 
-  constructor() {}
+  constructor() {
+    this.isDebug = false;
+  }
 
   /**
    * 初始化配置
@@ -20,6 +24,7 @@ class FpmsConnector {
    */
   public async initConfig(config: OpenAPIConfig, sdkTarget?: string) {
     this.service = getFpmsService(config, sdkTarget);
+    this.service.isDebug = this.isDebug;
     await this.service.initSocket();
     console.log('============================ init initConfig complete =============================');
   }
