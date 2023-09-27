@@ -1,4 +1,4 @@
-import { getService } from '../fpms';
+import { getFpmsSdk } from '../fpms';
 test('fpms test', async () => {
   const config = {
     PLATFORMID: '50',
@@ -9,7 +9,7 @@ test('fpms test', async () => {
     DEVICETYPE: 3,
     WSCLIENTTYPE: 4,
   };
-  console.log(`fpms=`, getService(config));
+  console.log(`fpms=`, getFpmsSdk(config));
   // await fpms.initConfig({
   //   PLATFORMID: "50",
   //   PARTNERID: "14033",

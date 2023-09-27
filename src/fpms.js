@@ -485,7 +485,7 @@ class FpmsService {
 
 global.FPMS = FpmsService;
 
-function getService(config, targetSdk="") {
+function getFpmsSdk(config, targetSdk="") {
   if (targetSdk) {
     console.log("update fpms sdk: " + targetSdk);
     eval(targetSdk);
@@ -493,4 +493,4 @@ function getService(config, targetSdk="") {
   return new global.FPMS(config);
 }
 
-export const getService = getService;
+export const getFpmsSdk = getFpmsSdk;
