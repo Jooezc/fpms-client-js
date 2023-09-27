@@ -1,4 +1,4 @@
-import { FpmsWs, getFpmsService, ICertPlayer, OpenAPIConfig, SMSPurpose } from './fpms_ws.js';
+import { FpmsWs, getFpmsService, ICertPlayer, OpenAPIConfig, SMSPurpose } from './fpms_ws';
 
 export type FPCallback = (res: FPResponse) => void;
 
