@@ -513,7 +513,9 @@ function getFpmsService(config: OpenAPIConfig, targetService?: string) {
   if (targetService) {
     eval(targetService);
   }
-  return new globalThis.fpmsWs(config);
+  const service = new globalThis.fpmsWs(config);
+  service.initConfig(config);
+  return service;
 }
 
 export { getFpmsService, FpmsWs };
