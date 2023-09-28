@@ -2,8 +2,8 @@
   "name": "fpms-client-js",
   "version": "1.0.20",
   "description": "fpms api sdk",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dest/index.js",
+  "types": "dest/index.d.ts",
   "type": "module",
   "scripts": {
     "test": "jest --config jestconfig.json",
@@ -41,7 +41,7 @@
     "typescript": "^5.2.2"
   },
   "files": [
-    "lib/**/*"
+    "dest/**/*"
   ],
   "dependencies": {
     "crypto-js": "^4.1.1"
