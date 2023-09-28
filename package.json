@@ -1,6 +1,6 @@
 {
   "name": "fpms-client-js",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "fpms api sdk",
   "main": "dest/index.js",
   "types": "dest/index.d.ts",
