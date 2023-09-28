@@ -1,4 +1,4 @@
-import { FpmsConnector } from '../index';
+import { fpms } from '../index';
 test('fpms test', async () => {
   // const config = {
   //   PLATFORMID: '50',
@@ -9,7 +9,7 @@ test('fpms test', async () => {
   //   DEVICETYPE: 3,
   //   WSCLIENTTYPE: 4,
   // };
-  console.log(`fpms=`, new FpmsConnector());
+  console.log(`fpms=`, fpms);
   // await fpms.initConfig({
   //   PLATFORMID: "50",
   //   PARTNERID: "14033",
