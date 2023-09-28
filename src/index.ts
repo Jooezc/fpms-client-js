@@ -152,4 +152,4 @@ class FpmsConnector {
   }
 }
 
-export const fpms = new FpmsConnector();
+export { FpmsConnector };
