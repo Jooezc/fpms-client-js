@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc --sourcemap",
+    "build": "tsc --emitDeclarationOnly",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
